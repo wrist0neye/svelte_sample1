@@ -1,4 +1,5 @@
 <script>
+  // 다음에는 formula parser를 만들어볼 예정.
   import { onMount } from 'svelte';
 
   let table;
@@ -6,6 +7,9 @@
   let isResizingRow = false;
   let startX, startY, startWidth, startHeight;
   let currentCol, currentRow;
+  let currentPosition = {x : 0, y: 0};
+  let isDragging = false;
+  let offset = {x: 0, y : 0};
 
   function onMouseDownCol(event, col) {
     isResizingCol = true;
@@ -60,6 +64,30 @@
       rowSep.addEventListener('mousedown', (event) => onMouseDownRow(event, rowSep.parentElement));
     });
   });
+
+  function dragMouseDown(event) {
+    event.preventDefault();
+    isDragging = true;
+    offset.x = event.clientX - currentPosition.x;
+    offset.y = event.clientY - currentPosition.y;
+    // document.addEventListener('mousemove', elementDrag);
+    // document.addEventListener('mouseup', closeDragElement);
+  }
+
+  function dragMouseMove(event) {
+    if (isDragging) {
+      currentPosition.x = event.clientX - offset.x;
+      currentPosition.y = event.clientY - offset.y;
+      // table.style.left = currentPosition.x + 'px';
+      // table.style.top = currentPosition.y + 'px';
+    }
+  }
+
+  function dragMouseUp(event) {
+    isDragging = false;
+    // document.removeEventListener('mousemove', elementDrag);
+    // document.removeEventListener('mouseup', closeDragElement);
+  }
 </script>
 
 <style>
@@ -115,10 +143,6 @@
     overflow-x: auto;
     /* transition: all 0.2s ease-in-out; */
   }
-  .table_container:hover{
-    border : 2px solid #ccc;
-    border-radius: 5px;
-  }
   .table_menu {
     display: flex;
     justify-content: space-between;
@@ -126,59 +150,88 @@
     background-color: #f1f1f1;
     border-bottom: 1px solid #ccc;
   }
+  .table_menu:hover{
+    cursor: move;
+    background-color: yellow;
+  }
   .table_widget{
+    position: absolute;
     display: flex;
     flex-direction: column;
     gap: 8px;
+    max-width: 600px;
+    max-height: 400px;
+    padding: 2px;
+    border: 1px dashed blue;
+  }
+  .table_widget:hover{
+    border : 2px solid #ccc;
+    border-radius: 5px;
+    transform: translateX(-1px) translateY(-1px);
+  }
+  .sketch_book {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 8px;
   }
 </style>
-<div class="table_widget">
-  <div class="table_menu"></div>
-  <div class="table_container">
-    <table bind:this={table}>
-      <thead>
-        <tr>
-          <th>
-            Header 1
-            <div class="col_sep"></div>
-            <div class="row_sep"></div>
-          </th>
-          <th>
-            Header 2
-            <div class="col_sep"></div>
-          </th>
-          <th>
-            Header 3
-            <div class="col_sep"></div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>
-            Data 1
-            <div class="row_sep"></div>
-          </td>
-          <td>
-            Data 2
-          </td>
-          <td>
-            Data 3
-          </td>
-        </tr>
-        <tr>
-          <td>
-            Data 4
-            <div class="row_sep"></div>
-          </td>
-          <td>
-            Data 5
-          </td>
-          <td>
-            Data 6
-          </td>
-        </tr>
-      </tbody>
-    </table>
+<div class="sketch_book">
+  <div class="table_widget"
+    style="left: {currentPosition.x}px; top: {currentPosition.y}px;"
+    on:mousemove={dragMouseMove}
+    on:mouseup={dragMouseUp}>
+    <div
+      class="table_menu"
+      on:mousedown={dragMouseDown}></div>
+    <div class="table_container">
+      <table bind:this={table}>
+        <thead>
+          <tr>
+            <th>
+              Header 1
+              <div class="col_sep"></div>
+              <div class="row_sep"></div>
+            </th>
+            <th>
+              Header 2
+              <div class="col_sep"></div>
+            </th>
+            <th>
+              Header 3
+              <div class="col_sep"></div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              Data 1
+              <div class="row_sep"></div>
+            </td>
+            <td>
+              Data 2
+            </td>
+            <td>
+              Data 3
+            </td>
+          </tr>
+          <tr>
+            <td>
+              Data 4
+              <div class="row_sep"></div>
+            </td>
+            <td>
+              Data 5
+            </td>
+            <td>
+              Data 6
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
