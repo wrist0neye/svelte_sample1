@@ -21,4 +21,19 @@
   import ResizableTable from "../Components/ResizableTable.svelte";
 </script>
 
-<ResizableTable></ResizableTable>
+<style>
+  .sketch_book {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+    background-color: #f1f1f1;
+    border-radius: 5px;
+    padding: 8px;
+  }
+</style>
+
+
+<div class="sketch_book">
+  <ResizableTable></ResizableTable>
+  <ResizableTable></ResizableTable>
+</div>
