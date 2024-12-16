@@ -5,6 +5,8 @@
   let table, currentTable;
   let isResizingCol = false;
   let isResizingRow = false;
+  let colSeps=[null,null,null], rowSeps=[null,null,null];
+
   let startX, startY, startWidth, startHeight;
   export let initialX = 10, initialY = 10;
   let currentCol, currentRow;
@@ -54,25 +56,6 @@
     document.removeEventListener('mouseup', onMouseUpRow);
   }
 
-  onMount(() => {
-    console.log("ResizableTable onMount called");
-    const colSeps = document.querySelectorAll('.col_sep');
-    colSeps.forEach(colSep => {
-      colSep.addEventListener('mousedown', (event) => onMouseDownCol(event, colSep.parentElement));
-    });
-
-    const rowSeps = document.querySelectorAll('.row_sep');
-    rowSeps.forEach(rowSep => {
-      rowSep.addEventListener('mousedown', (event) => onMouseDownRow(event, rowSep.parentElement));
-    });
-
-    // table = document.querySelector('.table_widget');
-    const tableMenus = document.querySelectorAll('.table_menu');
-    tableMenus.forEach(tableMenu => {
-      tableMenu.addEventListener('mousedown', e=> dragMouseDown(e, tableMenu.parentElement));
-    });
-  });
-
   function dragMouseDown(event, table) {
     event.preventDefault();
     isDragging = true;
@@ -108,6 +91,25 @@
     document.removeEventListener('mousemove', dragMouseDown);
     document.removeEventListener('mouseup', dragMouseUp);
   }
+
+  onMount(() => {
+    console.log("ResizableTable onMount called");
+    // const colSeps = document.querySelectorAll('.col_sep');
+    // colSeps.forEach(colSep => {
+    //   colSep.addEventListener('mousedown', (event) => onMouseDownCol(event, colSep.parentElement));
+    // });
+
+    // const rowSeps = document.querySelectorAll('.row_sep');
+    // rowSeps.forEach(rowSep => {
+    //   rowSep.addEventListener('mousedown', (event) => onMouseDownRow(event, rowSep.parentElement));
+    // });
+
+    // table = document.querySelector('.table_widget');
+    const tableMenus = document.querySelectorAll('.table_menu');
+    tableMenus.forEach(tableMenu => {
+      tableMenu.addEventListener('mousedown', e=> dragMouseDown(e, tableMenu.parentElement));
+    });
+  });
 </script>
 
 <style>
@@ -164,6 +166,7 @@
 
   .table_container {
     overflow-x: auto;
+    overflow-y: auto;
     display: grid;
     /* transition: all 0.2s ease-in-out; */
   }
@@ -259,43 +262,43 @@
       <thead>
         <tr>
           <th>
+            /
+            <div class="col_sep" bind:this={colSeps[0]} on:mousedown={(e)=>onMouseDownCol(e, colSeps[0].parentElement)}></div>
+            <div class="row_sep" bind:this={rowSeps[0]} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[0].parentElement)}></div>
+          </th>
+          <th>
             Header 1
-            <div class="col_sep"></div>
-            <div class="row_sep"></div>
+            <div class="col_sep" bind:this={colSeps[1]} on:mousedown={(e)=>onMouseDownCol(e, colSeps[1].parentElement)}></div>
           </th>
           <th>
             Header 2
-            <div class="col_sep"></div>
-          </th>
-          <th>
-            Header 3
-            <div class="col_sep"></div>
+            <div class="col_sep" bind:this={colSeps[2]} on:mousedown={(e)=>onMouseDownCol(e, colSeps[2].parentElement)}></div>
           </th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td>
+            1
+            <div class="row_sep" bind:this={rowSeps[1]} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[1].parentElement)}></div>
+          </td>
+          <td>
             Data 1
-            <div class="row_sep"></div>
           </td>
           <td>
             Data 2
           </td>
-          <td>
-            Data 3
-          </td>
         </tr>
         <tr>
           <td>
+            2
+            <div class="row_sep" bind:this={rowSeps[2]} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[2].parentElement)}></div>
+          </td>
+          <td>
+            Data 3
+          </td>
+          <td>
             Data 4
-            <div class="row_sep"></div>
-          </td>
-          <td>
-            Data 5
-          </td>
-          <td>
-            Data 6
           </td>
         </tr>
       </tbody>
