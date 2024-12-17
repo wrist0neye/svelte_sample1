@@ -6,6 +6,9 @@
   let isResizingCol = false;
   let isResizingRow = false;
   let colSeps=[null,null,null], rowSeps=[null,null,null];
+  let contents= [["", ""],["", ""]];
+  let col_label = "Column Separator";
+  let row_label = "Row Separator";
 
   let startX, startY, startWidth, startHeight;
   export let initialX = 10, initialY = 10;
@@ -113,6 +116,12 @@
 </script>
 
 <style>
+  div {
+    -webkit-user-select:none;
+    -moz-user-select:none;
+    -ms-user-select:none;
+    -user-select:none
+  }
   table {
     border-collapse: collapse;
     width: 100%;
@@ -122,10 +131,28 @@
     grid-row : 1;
   }
   th, td {
+    min-width: 0;
+    min-height: 0;
     border: 1px solid black;
-    padding: 8px;
     text-align: left;
     position: relative;
+  }
+  textarea {
+    resize: none;
+  }
+  .td_content {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width:100%;
+    height: 100%;
+  }
+  .td_content:hover{
+    cursor: pointer;
+    border: 1px solid navy;
+  }
+  .col_sep, .row_sep {
+    z-index: 1;
   }
   .col_sep {
     position: absolute;
@@ -165,8 +192,8 @@
   }
 
   .table_container {
-    overflow-x: auto;
-    overflow-y: auto;
+    overflow-x: visible;
+    overflow-y: visible;
     display: grid;
     /* transition: all 0.2s ease-in-out; */
   }
@@ -226,20 +253,20 @@
   }
   
   .add_col{
-    min-width: 1rem;
+    width: 1rem;
     grid-row : 1;
     grid-column : 2;
     cursor: col-resize;
   }
   .add_row{
-    min-height: 1rem;
+    height: 1rem;
     grid-row : 2;
     grid-column : 1;
     cursor: row-resize;
   }
   .modify_cell{
-    min-width: 1rem;
-    min-height: 1rem;
+    width: 1rem;
+    height: 1rem;
     grid-row : 2;
     grid-column : 2;
     cursor: se-resize;
@@ -263,16 +290,16 @@
         <tr>
           <th>
             /
-            <div class="col_sep" bind:this={colSeps[0]} on:mousedown={(e)=>onMouseDownCol(e, colSeps[0].parentElement)}></div>
-            <div class="row_sep" bind:this={rowSeps[0]} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[0].parentElement)}></div>
+            <div class="col_sep" bind:this={colSeps[0]} aria-label={col_label} on:mousedown={(e)=>onMouseDownCol(e, colSeps[0].parentElement)}></div>
+            <div class="row_sep" bind:this={rowSeps[0]} aria-label={row_label} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[0].parentElement)}></div>
           </th>
           <th>
-            Header 1
-            <div class="col_sep" bind:this={colSeps[1]} on:mousedown={(e)=>onMouseDownCol(e, colSeps[1].parentElement)}></div>
+            1
+            <div class="col_sep" bind:this={colSeps[1]} aria-label={col_label} on:mousedown={(e)=>onMouseDownCol(e, colSeps[1].parentElement)}></div>
           </th>
           <th>
-            Header 2
-            <div class="col_sep" bind:this={colSeps[2]} on:mousedown={(e)=>onMouseDownCol(e, colSeps[2].parentElement)}></div>
+            2
+            <div class="col_sep" bind:this={colSeps[2]} aria-label={col_label} on:mousedown={(e)=>onMouseDownCol(e, colSeps[2].parentElement)}></div>
           </th>
         </tr>
       </thead>
@@ -280,25 +307,29 @@
         <tr>
           <td>
             1
-            <div class="row_sep" bind:this={rowSeps[1]} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[1].parentElement)}></div>
+            <div class="row_sep" bind:this={rowSeps[1]} aria-label={row_label} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[1].parentElement)}></div>
           </td>
           <td>
-            Data 1
+            <!-- <input type="text" class="td_content"> -->
+            <div class="td_content">{contents[0][0]}</div>
           </td>
           <td>
-            Data 2
+            <!-- <label class="td_content">Data 2</label> -->
+            <textarea name="" id="">{contents[0][0]}</textarea>
           </td>
         </tr>
         <tr>
           <td>
             2
-            <div class="row_sep" bind:this={rowSeps[2]} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[2].parentElement)}></div>
+            <div class="row_sep" bind:this={rowSeps[2]} aria-label={row_label} on:mousedown={(e)=>onMouseDownRow(e, rowSeps[2].parentElement)}></div>
           </td>
           <td>
-            Data 3
+            <!-- <label for="2-1" class="td_content">
+              <input type="text" id="2-1" class="td_content"/>
+            </label> -->
           </td>
           <td>
-            Data 4
+            <!-- <textarea name="" id="" class="td_content">Data4</textarea> -->
           </td>
         </tr>
       </tbody>
