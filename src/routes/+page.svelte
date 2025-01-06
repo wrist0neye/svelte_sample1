@@ -1,23 +1,4 @@
 <!-- <script>
-  import Dragnode from "../Components/dragnode.svelte";
-</script>
-
-
-<div class="playground">
-  <Dragnode></Dragnode>
-</div>
-
-<style>
-  .playground{
-    width: 100%;
-    height: 800px;
-    border: 2px dashed grey;
-    border-radius: 10px;
-    background-color: lightgray;
-  }
-</style> -->
-
-<script>
   import ResizableTable from "../Components/ResizableTable.svelte";
 </script>
 
@@ -36,4 +17,24 @@
 <div class="sketch_book">
   <ResizableTable></ResizableTable>
   <ResizableTable></ResizableTable>
-</div>
+</div> -->
+
+<!-- 위 코드는 메인으로 사용할 코드 -->
+
+<script>
+  import Keypad from "../practice/Keypad.svelte";
+
+  let pin = $state('');
+
+  let view = $derived(pin ? pin.replace(/\d(?!$)/g, '•') : 'enter your pin');
+
+  function onsubmit(){
+    alert(`submitted ${pin}`);
+  }
+</script>
+
+<h1 style="opacity: {pin ? 1 : 0.4}">
+  {view}
+</h1>
+
+<Keypad bind:value={pin} {onsubmit}/>
