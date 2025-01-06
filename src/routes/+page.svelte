@@ -22,19 +22,37 @@
 <!-- 위 코드는 메인으로 사용할 코드 -->
 
 <script>
-  import Keypad from "../practice/Keypad.svelte";
+  import {paint} from '../practice/this binding/gradient.js';
 
-  let pin = $state('');
+  let canvas;
 
-  let view = $derived(pin ? pin.replace(/\d(?!$)/g, '•') : 'enter your pin');
+  $effect(()=> {
+    const context = canvas.getContext('2d');
 
-  function onsubmit(){
-    alert(`submitted ${pin}`);
-  }
+    let frame = requestAnimationFrame(function loop(t) {
+      frame = requestAnimationFrame(loop);
+      paint(context, t);
+    });
+
+    return () => {
+      cancelAnimationFrame(frame);
+    };
+  });
 </script>
 
-<h1 style="opacity: {pin ? 1 : 0.4}">
-  {view}
-</h1>
+<canvas bind:this={canvas} width = {32} height={32}></canvas>
 
-<Keypad bind:value={pin} {onsubmit}/>
+<style>
+  canvas {
+    position : fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #666;
+    mask: url('../practice/this binding/svelte-logo-mask.svg') 50% 50% no-repeat;
+    maks-size: 60vmin;
+    -webkit-mask: url('../practice/this binding/svelte-logo-mask.svg') 50% 50% no-repeat;
+    -webkit-mask-size: 60vmin;
+  }
+</style>
