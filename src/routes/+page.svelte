@@ -22,70 +22,24 @@
 <!-- 위 코드는 메인으로 사용할 코드 -->
 
 <script>
-  let todos = $state([
-    {done: false, text: 'finish Svelte tutorial'},
-    {done: false, text: 'build an app'},
-    {done: false, text: 'world domination'}
-  ]);
-
-  function add() {
-    todos.push({
-      done: false,
-      text: ''
-    })
-  }
-
-  function clear() {
-    todos = todos.filter((t)=> !t.done);
-  }
-
-  let remaining = $derived(todos.filter((t)=> !t.done).length);
+  import AudioPlayer from "../practice/Audio_/AudioPlayer.svelte";
+  import {tracks} from "../practice/Audio_/tracks.js"
 </script>
 
 <div class="centered">
-  <h1>todos</h1>
-
-  <ul class="todos">
-    {#each todos as todo}
-      <li class={{ done: todo.done}}>
-        <input type="checkbox" bind:checked={todo.done}/>
-        <input 
-          type="text"
-          placeholder="What needs to be done?"
-          bind:value={todo.text}/>
-      </li>
-    {/each}
-  </ul>
-
-  <p>{remaining} remaining</p>
-
-  <button onclick={add}>
-    Add new
-  </button>
-
-  <button onclick={clear}>
-    Clear completed
-  </button>
+	{#each tracks as track}
+		<AudioPlayer {...track} />
+	{/each}
 </div>
 
 <style>
-  .centerd{
-    max-width: 20em;
-    margin: 0 auto;
-  }
-
-  .done {
-    opacity: 0.4;
-  }
-
-  li {
-    display: flex;
-  }
-
-  input[type="text"] {
-    flex: 1;
-    padding: 0.5em;
-    margin: -0.2em 0;
-    border: none;
-  }
+	.centered {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		justify-content: center;
+		gap: 0.5em;
+		max-width: 40em;
+		margin: 0 auto;
+	}
 </style>
