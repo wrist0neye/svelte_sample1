@@ -22,37 +22,70 @@
 <!-- 위 코드는 메인으로 사용할 코드 -->
 
 <script>
-  import {paint} from '../practice/this binding/gradient.js';
+  let todos = $state([
+    {done: false, text: 'finish Svelte tutorial'},
+    {done: false, text: 'build an app'},
+    {done: false, text: 'world domination'}
+  ]);
 
-  let canvas;
+  function add() {
+    todos.push({
+      done: false,
+      text: ''
+    })
+  }
 
-  $effect(()=> {
-    const context = canvas.getContext('2d');
+  function clear() {
+    todos = todos.filter((t)=> !t.done);
+  }
 
-    let frame = requestAnimationFrame(function loop(t) {
-      frame = requestAnimationFrame(loop);
-      paint(context, t);
-    });
-
-    return () => {
-      cancelAnimationFrame(frame);
-    };
-  });
+  let remaining = $derived(todos.filter((t)=> !t.done).length);
 </script>
 
-<canvas bind:this={canvas} width = {32} height={32}></canvas>
+<div class="centered">
+  <h1>todos</h1>
+
+  <ul class="todos">
+    {#each todos as todo}
+      <li class={{ done: todo.done}}>
+        <input type="checkbox" bind:checked={todo.done}/>
+        <input 
+          type="text"
+          placeholder="What needs to be done?"
+          bind:value={todo.text}/>
+      </li>
+    {/each}
+  </ul>
+
+  <p>{remaining} remaining</p>
+
+  <button onclick={add}>
+    Add new
+  </button>
+
+  <button onclick={clear}>
+    Clear completed
+  </button>
+</div>
 
 <style>
-  canvas {
-    position : fixed;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: #666;
-    mask: url('../practice/this binding/svelte-logo-mask.svg') 50% 50% no-repeat;
-    maks-size: 60vmin;
-    -webkit-mask: url('../practice/this binding/svelte-logo-mask.svg') 50% 50% no-repeat;
-    -webkit-mask-size: 60vmin;
+  .centerd{
+    max-width: 20em;
+    margin: 0 auto;
+  }
+
+  .done {
+    opacity: 0.4;
+  }
+
+  li {
+    display: flex;
+  }
+
+  input[type="text"] {
+    flex: 1;
+    padding: 0.5em;
+    margin: -0.2em 0;
+    border: none;
   }
 </style>
